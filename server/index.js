@@ -16,7 +16,7 @@ app.use(express.static('public'));
 // ENDPOINT
 app.post('/api/screenshot', async (req, res) => {
   try {
-    // ideally post to AWS S3 bucket or similar
+    // ideally post to a db, AWS S3 bucket, or similar
     await writeFile(
       `./screenshots/screenshot-${Date.now()}.png`,
       Buffer.from(req.body.split('base64,')[1], 'base64')

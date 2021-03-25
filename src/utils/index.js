@@ -16,8 +16,6 @@ export const handleErrors = async res => {
 
 /**
  * Handles screenshot after user consent
- *
- * @param toastId Id to clear toast message
  */
 export const handleScreenshot = async () => {
   const canvas = document.createElement('canvas');
@@ -42,13 +40,13 @@ export const handleScreenshot = async () => {
       context.drawImage(
         video,
         0,
-        0
-        // window.outerWidth,
-        // window.outerHeight,
-        // 0,
-        // 0,
-        // window.outerWidth,
-        // window.outerHeight
+        0,
+        window.outerWidth,
+        window.outerHeight,
+        0,
+        0,
+        window.outerWidth,
+        window.outerHeight
       );
 
       // stop stream
