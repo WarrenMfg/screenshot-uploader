@@ -6,6 +6,8 @@ import { handleScreenshot } from '../utils';
 
 /**
  * Button to throw an error
+ *
+ * @param props.imageContainerRef The image container element
  */
 function Screenshot({ imageContainerRef }) {
   /**
