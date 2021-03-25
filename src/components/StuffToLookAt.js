@@ -5,7 +5,7 @@ import React from 'react';
  */
 function StuffToLookAt() {
   return (
-    <div className='container'>
+    <div className='container mb-4'>
       <p style={{ columns: '250px 4' }} className='px-4'>
         Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ullam nam
         eveniet numquam atque perspiciatis, accusamus quia earum quasi

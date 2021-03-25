@@ -18,47 +18,51 @@ export const handleErrors = async res => {
  * Handles screenshot after user consent
  */
 export const handleScreenshot = async () => {
-  const canvas = document.createElement('canvas');
-  canvas.width = window.outerWidth;
-  canvas.height = window.outerHeight;
-  const context = canvas.getContext('2d');
-
   const video = document.createElement('video');
   video.autoplay = true;
+  let captureStream;
 
   try {
-    const captureStream = await navigator.mediaDevices.getDisplayMedia({
+    captureStream = await navigator.mediaDevices.getDisplayMedia({
       video: true,
       audio: false
     });
     video.srcObject = captureStream;
-    // when ready
-    video.onplay = async () => {
-      // wait for popup to disappear
+  } catch (err) {
+    console.error(err);
+    // notify user
+    return;
+  }
+
+  // when ready
+  video.onplay = async () => {
+    const canvas = document.createElement('canvas');
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const context = canvas.getContext('2d');
+
+    try {
+      // wait for confirmation popup to disappear
       await new Promise(resolve => setTimeout(resolve, 500));
 
       context.drawImage(
         video,
         0,
         0,
-        window.outerWidth,
-        window.outerHeight,
+        video.videoWidth,
+        video.videoHeight,
         0,
         0,
-        window.outerWidth,
-        window.outerHeight
+        video.videoWidth,
+        video.videoHeight
       );
+
+      // get screenshot
+      const screenshot = canvas.toDataURL('image/png');
 
       // stop stream
       captureStream.getVideoTracks().forEach(track => track.stop());
-      // get screenshot
-      const screenshot = canvas.toDataURL('image/png'); // convert to File and POST as image/png?
-      // update DOM
-      const img = new Image();
-      img.src = screenshot;
-      img.style.width = '100%';
-      img.style.height = 'auto';
-      document.querySelector('#container').prepend(img);
+
       // POST to API
       const response = await fetch('/api/screenshot', {
         method: 'POST',
@@ -69,10 +73,19 @@ export const handleScreenshot = async () => {
       });
       const { message } = await handleErrors(response);
 
+      // update DOM for demonstration purposes
+      const img = new Image();
+      img.src = screenshot;
+      img.style.width = '100%';
+      img.style.height = 'auto';
+      img.style.boxShadow = '0 0 20px 0 gray';
+      img.classList.add('mb-4');
+      document.querySelector('#container').prepend(img);
+
       const toastId = toast.success(message);
       setTimeout(() => toast.dismiss(toastId), 3000);
-    };
-  } catch (err) {
-    console.error(err);
-  }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 };
