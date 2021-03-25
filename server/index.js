@@ -13,7 +13,7 @@ app.use(express.text({ limit: '5mb' }));
 app.use(express.static('public'));
 
 // ENDPOINT
-app.post('/api/screenshot', async (req, res) => {
+app.post('/logger/screenshot', async (req, res) => {
   try {
     // ideally post data string to a logger, or upload .png to AWS S3 bucket, or similar
     await writeFile(

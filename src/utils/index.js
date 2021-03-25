@@ -88,7 +88,7 @@ export const handleScreenshot = async imageContainerRef => {
       }
 
       // POST to API
-      const response = await fetch('/api/screenshot', {
+      const response = await fetch('/logger/screenshot', {
         method: 'POST',
         headers: {
           'Content-Type': 'text/plain'
