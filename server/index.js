@@ -8,8 +8,8 @@ const PORT = process.env.PORT || 5500;
 const app = express();
 
 // middleware
-app.use(express.text({ limit: '1mb' }));
 app.use(morgan('dev'));
+app.use(express.text({ limit: '5mb' }));
 app.use(express.static('public'));
 
 // ENDPOINT

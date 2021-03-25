@@ -21,7 +21,7 @@ export const handleErrors = async res => {
 /**
  * Handles screenshot after user consent
  */
-export const handleScreenshot = async () => {
+export const handleScreenshot = async imageContainerRef => {
   // make video element to pipe in user's browser
   const video = document.createElement('video');
   video.autoplay = true;
@@ -39,7 +39,9 @@ export const handleScreenshot = async () => {
     // stop stream
     captureStream.getVideoTracks().forEach(track => track.stop());
     // notify user
-    toast.error('Sorry, we made a boo boo...');
+    toast.error('Sorry, we made a boo boo...', {
+      className: 'cursor-pointer'
+    });
     console.error(err);
     return;
   }
@@ -75,6 +77,14 @@ export const handleScreenshot = async () => {
       // stop stream
       captureStream.getVideoTracks().forEach(track => track.stop());
 
+      // confirm length is no greater than 5,000,000 bytes
+      if (screenshot.length > 5_000_000) {
+        toast.error('File size must be smaller than 5mb.', {
+          className: 'cursor-pointer'
+        });
+        return;
+      }
+
       // POST to API
       const response = await fetch('/api/screenshot', {
         method: 'POST',
@@ -88,25 +98,30 @@ export const handleScreenshot = async () => {
       // update DOM for demonstration purposes
       const img = new Image();
       img.src = screenshot;
-      img.style.width = '100%';
-      img.style.height = 'auto';
       img.style.boxShadow = '0 0 20px 0 gray';
       img.classList.add(
+        'relative',
         'mb-4',
+        'w-full',
+        'h-auto',
         'transform',
         'transition-all',
         'hover:scale-105'
       );
-      document.querySelector('#container').prepend(img);
+      imageContainerRef.current.prepend(img);
 
       // notify user
-      const toastId = toast.success(message);
+      const toastId = toast.success(message, {
+        className: 'cursor-pointer'
+      });
       setTimeout(() => toast.dismiss(toastId), 3000);
     } catch (error) {
       // stop stream
       captureStream.getVideoTracks().forEach(track => track.stop());
       // notify user
-      toast.error('Sorry, we made a boo boo...');
+      toast.error('Sorry, we made a boo boo...', {
+        className: 'cursor-pointer'
+      });
       console.error(error);
     }
   };

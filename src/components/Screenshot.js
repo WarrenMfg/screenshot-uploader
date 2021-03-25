@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import toast from 'react-hot-toast';
 
 import { handleScreenshot } from '../utils';
@@ -6,7 +7,7 @@ import { handleScreenshot } from '../utils';
 /**
  * Button to throw an error
  */
-function ThrowError() {
+function Screenshot({ imageContainerRef }) {
   /**
    * Click handler that throws an error
    */
@@ -28,7 +29,7 @@ function ThrowError() {
                 className='w-2/5 bg-green-200 hover:bg-green-500 transition-all rounded-full py-2 px-4 ml-4'
                 onClick={() => {
                   toast.remove();
-                  handleScreenshot();
+                  handleScreenshot(imageContainerRef);
                 }}
               >
                 Send
@@ -63,4 +64,8 @@ function ThrowError() {
   );
 }
 
-export default ThrowError;
+Screenshot.propTypes = {
+  imageContainerRef: PropTypes.object.isRequired
+};
+
+export default Screenshot;
