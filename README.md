@@ -4,6 +4,20 @@
 
 - **Note**: Updating the DOM with the screenshot is just for demonstration purposes.
 
+## Simulate an unexpected error
+
+![Throw Error button](readme-gifs/throw-error.png)
+
+## Send screenshot
+
+![Send screenshot](readme-gifs/send-screenshot.png)
+
+## Great success!
+
+![Great success!](readme-gifs/great-success.png)
+
+## All together now
+
 ![Screenshot uploader](readme-gifs/screenshot-uploader.gif)
 
 # How to run locally
