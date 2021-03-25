@@ -20,6 +20,8 @@ export const handleErrors = async res => {
 
 /**
  * Handles screenshot after user consent
+ *
+ * @param imageContainerRef The image container element
  */
 export const handleScreenshot = async imageContainerRef => {
   // make video element to pipe in user's browser
