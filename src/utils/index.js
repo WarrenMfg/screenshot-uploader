@@ -22,31 +22,38 @@ export const handleErrors = async res => {
  * Handles screenshot after user consent
  */
 export const handleScreenshot = async () => {
+  // make video element to pipe in user's browser
   const video = document.createElement('video');
   video.autoplay = true;
   let captureStream;
 
   try {
+    // get input stream
     captureStream = await navigator.mediaDevices.getDisplayMedia({
       video: true,
       audio: false
     });
+    // pipe into video element
     video.srcObject = captureStream;
   } catch (err) {
-    console.error(err);
+    // stop stream
+    captureStream.getVideoTracks().forEach(track => track.stop());
     // notify user
+    toast.error('Sorry, we made a boo boo...');
+    console.error(err);
     return;
   }
 
   // when ready
   video.onplay = async () => {
+    // make canvas and get context
     const canvas = document.createElement('canvas');
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
     const context = canvas.getContext('2d');
 
     try {
-      // wait for confirmation popup to disappear
+      // wait for streaming confirmation popup to disappear
       await new Promise(resolve => setTimeout(resolve, 500));
 
       // draw video on canvas
@@ -84,13 +91,22 @@ export const handleScreenshot = async () => {
       img.style.width = '100%';
       img.style.height = 'auto';
       img.style.boxShadow = '0 0 20px 0 gray';
-      img.classList.add('mb-4');
+      img.classList.add(
+        'mb-4',
+        'transform',
+        'transition-all',
+        'hover:scale-105'
+      );
       document.querySelector('#container').prepend(img);
 
-      // toast
+      // notify user
       const toastId = toast.success(message);
       setTimeout(() => toast.dismiss(toastId), 3000);
     } catch (error) {
+      // stop stream
+      captureStream.getVideoTracks().forEach(track => track.stop());
+      // notify user
+      toast.error('Sorry, we made a boo boo...');
       console.error(error);
     }
   };
