@@ -8,9 +8,13 @@ import toast from 'react-hot-toast';
  */
 export const handleErrors = async res => {
   if (!res.ok) {
-    throw await res.json();
+    throw res.headers.get('Content-Type').includes('json')
+      ? await res.json()
+      : await res.text();
   } else {
-    return res.json();
+    return res.headers.get('Content-Type').includes('json')
+      ? res.json()
+      : res.text();
   }
 };
 
@@ -45,6 +49,7 @@ export const handleScreenshot = async () => {
       // wait for confirmation popup to disappear
       await new Promise(resolve => setTimeout(resolve, 500));
 
+      // draw video on canvas
       context.drawImage(
         video,
         0,
@@ -82,6 +87,7 @@ export const handleScreenshot = async () => {
       img.classList.add('mb-4');
       document.querySelector('#container').prepend(img);
 
+      // toast
       const toastId = toast.success(message);
       setTimeout(() => toast.dismiss(toastId), 3000);
     } catch (error) {
